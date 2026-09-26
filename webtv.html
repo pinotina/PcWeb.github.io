@@ -23,7 +23,7 @@
       padding: 10px;
     }
 
-    /* BARRA TITOLO BRANO IN ONDA */
+    /* BARRA SUPERIORE TITOLO BRANO */
     .song-banner {
       width: 100%;
       max-width: 1200px;
@@ -39,15 +39,18 @@
       text-shadow: 0 0 5px #00ffcc;
     }
 
-    /* CONTENITORE PLAYER AUDIO RADIO */
-    .audio-container {
+    /* PLAYER AUDIO DIRETTAMENTE DA AZURACAST */
+    .audio-player-box {
+      width: 100%;
+      max-width: 1200px;
       margin-bottom: 15px;
       text-align: center;
     }
 
     audio {
+      width: 100%;
+      max-width: 500px;
       height: 40px;
-      width: 320px;
       border-radius: 20px;
     }
 
@@ -107,24 +110,25 @@
 </head>
 <body>
 
-  <!-- BARRA TITOLO BRANO -->
+  <!-- BARRA TITOLO BRANO IN ONDA -->
   <div id="titolo-in-onda" class="song-banner">
     MILANO ONDE RADIO - Connessione in corso...
   </div>
 
-  <!-- PLAYER STREAMING AUDIO RADIO -->
-  <div class="audio-container">
+  <!-- PLAYER AUDIO STREAMING RADIO AZURACAST -->
+  <div class="audio-player-box">
     <audio controls autoplay>
       <source src="https://a4.asurahosting.com/listen/milano_onde_radio/radio.mp3" type="audio/mpeg">
+      Il tuo browser non supporta il lettore audio.
     </audio>
   </div>
 
   <div class="main-container">
     
-    <!-- SINISTRA: VIDEO YOUTUBE IN ONDA -->
+    <!-- SINISTRA: PLAYER YOUTUBE CON ID REALE -->
     <div class="video-box">
       <iframe id="player-youtube" 
-              src="https://www.youtube.com/embed?listType=search&list=whitney+houston+official+music+video&autoplay=1&mute=1" 
+              src="https://www.youtube.com/embed/L3HQMbqaNTH?autoplay=1&mute=1&enablejsapi=1" 
               allow="autoplay">
       </iframe>
     </div>
@@ -141,18 +145,16 @@
   </div>
 
   <script>
-    let ultimoBrano = "";
+    // MAPPA DEGLI ARTISTI E DEI RISPETTIVI ID YOUTUBE
+    // Puoi aggiungere tutte le parole chiave e gli ID video che vuoi!
+    const videoMappa = {
+      "whitney": "L3HQMbqaNTH",  // Whitney Houston - I Will Always Love You
+      "mariah": "mIHG2fAC-sM",   // Mariah Carey - Without You
+      "celine": "WNIPqafd4As",   // Celine Dion - My Heart Will Go On
+      "default": "L3HQMbqaNTH"   // Video di base se non trova corrispondenze
+    };
 
-    function pulisciTitoloBrano(titolo) {
-      return titolo
-        .replace(/greatest hits.*/gi, '')
-        .replace(/best songs.*/gi, '')
-        .replace(/\(hq audio\)/gi, '')
-        .replace(/\(official video\)/gi, '')
-        .replace(/\(official music video\)/gi, '')
-        .replace(/2026|2025|2024/g, '')
-        .trim();
-    }
+    let ultimoBrano = "";
 
     async function aggiornaBranoAzuraCast() {
       try {
@@ -160,17 +162,28 @@
         const data = await response.json();
 
         if (data && data.now_playing) {
-          const branoGrezzo = data.now_playing.song.text;
-          document.getElementById('titolo-in-onda').innerText = "IN ONDA SU MILANO ONDE RADIO: " + branoGrezzo;
+          const branoAttuale = data.now_playing.song.text;
+          document.getElementById('titolo-in-onda').innerText = "IN ONDA SU MILANO ONDE RADIO: " + branoAttuale;
 
-          if (branoGrezzo !== ultimoBrano) {
-            ultimoBrano = branoGrezzo;
-            
-            const titoloPulito = pulisciTitoloBrano(branoGrezzo);
-            const ricercaQuery = encodeURIComponent(titoloPulito + " official music video");
-            
+          if (branoAttuale !== ultimoBrano) {
+            ultimoBrano = branoAttuale;
+            const branoLower = branoAttuale.toLowerCase();
+            let videoId = videoMappa["default"];
+
+            // Cerca se nel titolo di RadioBOSS c'è una parola chiave presente nella mappa
+            for (let chiave in videoMappa) {
+              if (chiave !== "default" && branoLower.includes(chiave)) {
+                videoId = videoMappa[chiave];
+                break;
+              }
+            }
+
             const iframe = document.getElementById('player-youtube');
-            iframe.src = `https://www.youtube.com/embed?listType=search&list=${ricercaQuery}&autoplay=1&mute=1`;
+            const nuovaUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&enablejsapi=1`;
+            
+            if (iframe.src !== nuovaUrl) {
+              iframe.src = nuovaUrl;
+            }
           }
         }
       } catch (error) {
