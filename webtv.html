@@ -23,7 +23,7 @@
       padding: 10px;
     }
 
-    /* BARRA SUPERIORE TITOLO BRANO */
+    /* BARRA TITOLO BRANO IN ONDA */
     .song-banner {
       width: 100%;
       max-width: 1200px;
@@ -35,8 +35,20 @@
       font-size: 16px;
       border: 2px solid #00ffcc;
       border-radius: 10px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       text-shadow: 0 0 5px #00ffcc;
+    }
+
+    /* CONTENITORE PLAYER AUDIO RADIO */
+    .audio-container {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    audio {
+      height: 40px;
+      width: 320px;
+      border-radius: 20px;
     }
 
     /* CONTENITORE AFFIANCATO VIDEO + CHAT */
@@ -95,19 +107,25 @@
 </head>
 <body>
 
-  <!-- BARRA TITOLO BRANO IN ONDA -->
+  <!-- BARRA TITOLO BRANO -->
   <div id="titolo-in-onda" class="song-banner">
     MILANO ONDE RADIO - Connessione in corso...
   </div>
 
+  <!-- PLAYER STREAMING AUDIO RADIO -->
+  <div class="audio-container">
+    <audio controls autoplay>
+      <source src="https://a4.asurahosting.com/listen/milano_onde_radio/radio.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
   <div class="main-container">
     
-    <!-- SINISTRA: PLAYER VIDEO YOUTUBE AUTOMATICO -->
+    <!-- SINISTRA: VIDEO YOUTUBE IN ONDA -->
     <div class="video-box">
       <iframe id="player-youtube" 
-              src="https://www.youtube-nocookie.com/embed?listType=search&list=music+video&autoplay=1" 
-              allow="autoplay; encrypted-media" 
-              allowfullscreen>
+              src="https://www.youtube.com/embed?listType=search&list=whitney+houston+official+music+video&autoplay=1&mute=1" 
+              allow="autoplay">
       </iframe>
     </div>
 
@@ -122,12 +140,10 @@
     MILANO ONDE RADIO — Created by ACHILLE
   </div>
 
-  <!-- SCRIPT PULIZIA E RICERCA VIDEO AUTOMATICA -->
   <script>
     let ultimoBrano = "";
 
     function pulisciTitoloBrano(titolo) {
-      // Rimuove tag ed estensioni che bloccano la ricerca su YouTube
       return titolo
         .replace(/greatest hits.*/gi, '')
         .replace(/best songs.*/gi, '')
@@ -150,12 +166,11 @@
           if (branoGrezzo !== ultimoBrano) {
             ultimoBrano = branoGrezzo;
             
-            // Pulisce il nome della canzone per trovare il videoclip reale
             const titoloPulito = pulisciTitoloBrano(branoGrezzo);
             const ricercaQuery = encodeURIComponent(titoloPulito + " official music video");
             
             const iframe = document.getElementById('player-youtube');
-            iframe.src = `https://www.youtube-nocookie.com/embed?listType=search&list=${ricercaQuery}&autoplay=1`;
+            iframe.src = `https://www.youtube.com/embed?listType=search&list=${ricercaQuery}&autoplay=1&mute=1`;
           }
         }
       } catch (error) {
