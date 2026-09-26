@@ -23,7 +23,7 @@
       padding: 10px;
     }
 
-    /* BARRA SUPERIORE TITOLO BRANO IN ONDA */
+    /* BARRA SUPERIORE TITOLO BRANO */
     .song-banner {
       width: 100%;
       max-width: 1200px;
@@ -39,24 +39,19 @@
       text-shadow: 0 0 5px #00ffcc;
     }
 
-    /* PULSANTE PER ABILITARE L'AUDIO (REQUISITO BROWSER) */
-    .audio-btn {
-      background: #00ffcc;
-      color: #000;
-      border: none;
-      padding: 10px 20px;
-      font-weight: bold;
-      font-size: 14px;
-      border-radius: 6px;
-      cursor: pointer;
+    /* PLAYER AUDIO DIRETTAMENTE DA AZURACAST */
+    .audio-player-box {
+      width: 100%;
+      max-width: 1200px;
       margin-bottom: 15px;
-      box-shadow: 0 0 10px #00ffcc;
-      transition: 0.3s;
+      text-align: center;
     }
 
-    .audio-btn:hover {
-      background: #fff;
-      box-shadow: 0 0 20px #fff;
+    audio {
+      width: 100%;
+      max-width: 600px;
+      height: 40px;
+      border-radius: 8px;
     }
 
     /* CONTENITORE AFFIANCATO VIDEO + CHAT */
@@ -71,7 +66,7 @@
       max-width: 1200px;
     }
 
-    /* CONTENITORE VIDEO YOUTUBE */
+    /* CONTENITORE VIDEO MP4 */
     .video-box {
       flex: 1;
       min-width: 320px;
@@ -83,10 +78,10 @@
       box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
     }
 
-    .video-box iframe {
+    .video-box video {
       width: 100%;
       height: 100%;
-      border: none;
+      object-fit: cover;
     }
 
     /* CONTENITORE CHAT XAT */
@@ -115,22 +110,27 @@
 </head>
 <body>
 
-  <!-- BARRA TITOLO BRANO -->
+  <!-- BARRA TITOLO BRANO IN ONDA -->
   <div id="titolo-in-onda" class="song-banner">
     MILANO ONDE RADIO - Connessione in corso...
   </div>
 
-  <!-- BOTTONE PER ABILITARE AUDIO SUI BROWSER -->
-  <button id="btn-audio" class="audio-btn" onclick="attivaAudio()">🔊 CLICCA QUI PER ATTIVARE L'AUDIO DELLA TV</button>
+  <!-- STREAMING AUDIO AZURACAST IN DIRETTA -->
+  <div class="audio-player-box">
+    <audio controls autoplay>
+      <source src="https://a4.asurahosting.com/listen/milano_onde_radio/radio.mp3" type="audio/mpeg">
+      Il tuo browser non supporta il lettore audio.
+    </audio>
+  </div>
 
   <div class="main-container">
     
-    <!-- SINISTRA: PLAYER VIDEO AUTOMATICO YOUTUBE -->
+    <!-- SINISTRA: VIDEO PLAYER MP4 AUTOMATICO -->
     <div class="video-box">
-      <iframe id="player-youtube" 
-              src="https://www.youtube.com/embed?listType=search&list=music+video&autoplay=1&mute=1" 
-              allow="autoplay">
-      </iframe>
+      <video id="video-centrale" autoplay loop muted playsinline>
+        <source id="video-source" src="https://pinotina.github.io/PcWeb.github.io/SIMO.mp4" type="video/mp4">
+        Il tuo browser non supporta il tag video.
+      </video>
     </div>
 
     <!-- DESTRA: CHAT XAT -->
@@ -144,19 +144,15 @@
     MILANO ONDE RADIO — Created by ACHILLE
   </div>
 
+  <!-- SCRIPT DI AGGIORNAMENTO BRANO E VIDEO -->
   <script>
-    let ultimoBrano = "";
-    let audioAttivo = false;
+    // MAPPA DEI TUOI VIDEO MP4 SU GITHUB
+    const libreriaVideo = {
+      "whitney": "https://pinotina.github.io/PcWeb.github.io/SIMO.mp4",
+      "default": "https://pinotina.github.io/PcWeb.github.io/SIMO.mp4"
+    };
 
-    function attivaAudio() {
-      audioAttivo = true;
-      const iframe = document.getElementById('player-youtube');
-      // Sblocca audio ricaricando il video corrente senza mute
-      if (ultimoBrano !== "") {
-        iframe.src = `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(ultimoBrano + " official music video")}&autoplay=1&mute=0`;
-      }
-      document.getElementById('btn-audio').style.display = 'none';
-    }
+    let ultimoBrano = "";
 
     async function aggiornaBranoAzuraCast() {
       try {
@@ -167,14 +163,26 @@
           const branoAttuale = data.now_playing.song.text;
           document.getElementById('titolo-in-onda').innerText = "IN ONDA SU MILANO ONDE RADIO: " + branoAttuale;
 
-          // Se la canzone mandata dal DJ cambia
           if (branoAttuale !== ultimoBrano) {
             ultimoBrano = branoAttuale;
-            const iframe = document.getElementById('player-youtube');
-            const muteParam = audioAttivo ? "0" : "1";
+            const branoLower = branoAttuale.toLowerCase();
+            let nuovoVideo = libreriaVideo["default"];
+
+            for (let chiave in libreriaVideo) {
+              if (chiave !== "default" && branoLower.includes(chiave)) {
+                nuovoVideo = libreriaVideo[chiave];
+                break;
+              }
+            }
+
+            const player = document.getElementById('video-centrale');
+            const source = document.getElementById('video-source');
             
-            // Cerca automaticamente il video musicale su YouTube basandosi sul brano in onda
-            iframe.src = `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(branoAttuale + " official music video")}&autoplay=1&mute=${muteParam}`;
+            if (source.src !== nuovoVideo) {
+              source.src = nuovoVideo;
+              player.load();
+              player.play();
+            }
           }
         }
       } catch (error) {
