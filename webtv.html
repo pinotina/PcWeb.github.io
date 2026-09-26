@@ -55,7 +55,7 @@
       width: 100%;
       height: 100%;
       z-index: 2;
-      background: rgba(0, 0, 0, 0.25);
+      background: transparent;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -101,7 +101,7 @@
 
     <!-- VIDEO PLAYER MP4 CENTRALE (SFONDO) -->
     <video id="video-centrale" class="tv-background-video" autoplay loop muted playsinline>
-      <source id="video-source" src="https://pinotina.github.io/PcWeb.github.io/default.mp4" type="video/mp4">
+      <source id="video-source" src="https://pinotina.github.io/PcWeb.github.io/SIMO.mp4" type="video/mp4">
       Il tuo browser non supporta il tag video.
     </video>
 
@@ -118,9 +118,9 @@
   <!-- SCRIPT DI CONNESSIONE AD AZURACAST -->
   <script>
     // MAPPA VIDEO MP4 PERSONALIZZATI SU GITHUB PAGES
-    // Aggiungi qui le associazioni artista/canzone -> link del video mp4
     const libreriaVideo = {
-      "default": "https://pinotina.github.io/PcWeb.github.io/default.mp4"
+      "whitney": "https://pinotina.github.io/PcWeb.github.io/SIMO.mp4",
+      "default": "https://pinotina.github.io/PcWeb.github.io/SIMO.mp4"
     };
 
     let ultimoBrano = "";
@@ -131,7 +131,7 @@
         const data = await response.json();
 
         if (data && data.now_playing) {
-          const branoAttuale = data.now_playing.song.text; // Es: "Artista - Titolo"
+          const branoAttuale = data.now_playing.song.text;
           
           document.getElementById('titolo-in-onda').innerText = "IN ONDA SU MILANO ONDE RADIO: " + branoAttuale;
 
@@ -140,7 +140,6 @@
             const branoLower = branoAttuale.toLowerCase();
             let nuovoVideo = libreriaVideo["default"];
 
-            // Cerca se il nome dell'artista o della canzone è presente nella libreria
             for (let chiave in libreriaVideo) {
               if (chiave !== "default" && branoLower.includes(chiave)) {
                 nuovoVideo = libreriaVideo[chiave];
@@ -163,7 +162,6 @@
       }
     }
 
-    // Controllo automatico ogni 5 secondi
     setInterval(aggiornaBranoAzuraCast, 5000);
     aggiornaBranoAzuraCast();
   </script>
