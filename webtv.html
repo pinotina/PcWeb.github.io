@@ -23,7 +23,7 @@
       padding: 10px;
     }
 
-    /* BARRA SUPERIORE TITOLO BRANO */
+    /* BARRA SUPERIORE TITOLO BRANO IN ONDA */
     .song-banner {
       width: 100%;
       max-width: 1200px;
@@ -35,23 +35,8 @@
       font-size: 16px;
       border: 2px solid #00ffcc;
       border-radius: 10px;
-      margin-bottom: 10px;
-      text-shadow: 0 0 5px #00ffcc;
-    }
-
-    /* PLAYER AUDIO DIRETTAMENTE DA AZURACAST */
-    .audio-player-box {
-      width: 100%;
-      max-width: 1200px;
       margin-bottom: 15px;
-      text-align: center;
-    }
-
-    audio {
-      width: 100%;
-      max-width: 500px;
-      height: 40px;
-      border-radius: 20px;
+      text-shadow: 0 0 5px #00ffcc;
     }
 
     /* CONTENITORE AFFIANCATO VIDEO + CHAT */
@@ -66,7 +51,7 @@
       max-width: 1200px;
     }
 
-    /* BOX VIDEO YOUTUBE */
+    /* BOX VIDEO MP4 */
     .video-box {
       flex: 1;
       min-width: 320px;
@@ -78,10 +63,10 @@
       box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
     }
 
-    .video-box iframe {
+    .video-box video {
       width: 100%;
       height: 100%;
-      border: none;
+      object-fit: cover;
     }
 
     /* BOX CHAT XAT */
@@ -110,30 +95,22 @@
 </head>
 <body>
 
-  <!-- BARRA TITOLO BRANO IN ONDA -->
+  <!-- BARRA TITOLO BRANO IN ONDA DA RADIOBOSS -->
   <div id="titolo-in-onda" class="song-banner">
     MILANO ONDE RADIO - Connessione in corso...
   </div>
 
-  <!-- PLAYER AUDIO STREAMING RADIO AZURACAST -->
-  <div class="audio-player-box">
-    <audio controls autoplay>
-      <source src="https://a4.asurahosting.com/listen/milano_onde_radio/radio.mp3" type="audio/mpeg">
-      Il tuo browser non supporta il lettore audio.
-    </audio>
-  </div>
-
   <div class="main-container">
     
-    <!-- SINISTRA: PLAYER YOUTUBE CON ID REALE -->
+    <!-- SINISTRA: IL TUO FILMATO MP4 DELL'AUTO TRANSFORMER -->
     <div class="video-box">
-      <iframe id="player-youtube" 
-              src="https://www.youtube.com/embed/L3HQMbqaNTH?autoplay=1&mute=1&enablejsapi=1" 
-              allow="autoplay">
-      </iframe>
+      <video id="video-centrale" autoplay loop muted playsinline>
+        <source src="https://pinotina.github.io/PcWeb.github.io/PixVerse_Seedance-2.0-standard_Image_Text_1080.mp4" type="video/mp4">
+        Il tuo browser non supporta il tag video.
+      </video>
     </div>
 
-    <!-- DESTRA: CHAT XAT -->
+    <!-- DESTRA: CHAT XAT CON AUDIO E VOLUME INTEGRATO -->
     <div class="chat-box">
       <iframe src="https://xat.com/embed/chat.php#id=220480838" allowTransparency="true"></iframe>
     </div>
@@ -144,18 +121,8 @@
     MILANO ONDE RADIO — Created by ACHILLE
   </div>
 
+  <!-- SCRIPT DI AGGIORNAMENTO DEL TITOLO IN ONDA -->
   <script>
-    // MAPPA DEGLI ARTISTI E DEI RISPETTIVI ID YOUTUBE
-    // Puoi aggiungere tutte le parole chiave e gli ID video che vuoi!
-    const videoMappa = {
-      "whitney": "L3HQMbqaNTH",  // Whitney Houston - I Will Always Love You
-      "mariah": "mIHG2fAC-sM",   // Mariah Carey - Without You
-      "celine": "WNIPqafd4As",   // Celine Dion - My Heart Will Go On
-      "default": "L3HQMbqaNTH"   // Video di base se non trova corrispondenze
-    };
-
-    let ultimoBrano = "";
-
     async function aggiornaBranoAzuraCast() {
       try {
         const response = await fetch('https://a4.asurahosting.com/api/nowplaying/milano_onde_radio');
@@ -164,27 +131,6 @@
         if (data && data.now_playing) {
           const branoAttuale = data.now_playing.song.text;
           document.getElementById('titolo-in-onda').innerText = "IN ONDA SU MILANO ONDE RADIO: " + branoAttuale;
-
-          if (branoAttuale !== ultimoBrano) {
-            ultimoBrano = branoAttuale;
-            const branoLower = branoAttuale.toLowerCase();
-            let videoId = videoMappa["default"];
-
-            // Cerca se nel titolo di RadioBOSS c'è una parola chiave presente nella mappa
-            for (let chiave in videoMappa) {
-              if (chiave !== "default" && branoLower.includes(chiave)) {
-                videoId = videoMappa[chiave];
-                break;
-              }
-            }
-
-            const iframe = document.getElementById('player-youtube');
-            const nuovaUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&enablejsapi=1`;
-            
-            if (iframe.src !== nuovaUrl) {
-              iframe.src = nuovaUrl;
-            }
-          }
         }
       } catch (error) {
         console.error("Errore di connessione ad AzuraCast:", error);
