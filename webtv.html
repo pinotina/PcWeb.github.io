@@ -20,109 +20,123 @@
       justify-content: center;
       min-height: 100vh;
       color: #fff;
-      overflow-x: hidden;
+      padding: 10px;
     }
 
-    /* CONTENITORE PRINCIPALE STILE TV */
-    .tv-container {
-      position: relative;
-      width: 100%;
-      max-width: 900px;
-      height: 600px;
-      border: 4px solid #333;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 0 30px rgba(0, 255, 204, 0.3);
-      background: #000;
-    }
-
-    /* VIDEO MP4 IN SFONDO */
-    .tv-background-video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 1;
-    }
-
-    /* CHAT DI XAT SOVRAPPOSTA AL VIDEO */
-    .chat-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      background: rgba(0, 0, 0, 0.25);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* BARRA TITOLO BRANO IN ONDA IN ALTO */
+    /* BARRA SUPERIORE TITOLO BRANO */
     .song-banner {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
-      background: rgba(0, 0, 0, 0.85);
+      max-width: 1200px;
+      background: rgba(0, 0, 0, 0.9);
       color: #00ffcc;
       text-align: center;
-      padding: 10px;
+      padding: 12px;
       font-weight: bold;
       font-size: 16px;
-      z-index: 3;
-      border-bottom: 2px solid #00ffcc;
+      border: 2px solid #00ffcc;
+      border-radius: 10px;
+      margin-bottom: 15px;
       text-shadow: 0 0 5px #00ffcc;
     }
 
-    /* FIRMA CREDITS IN BASSO */
+    /* CONTENITORE AFFIANCATO VIDEO + CHAT */
+    .main-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    /* BOX VIDEO YOUTUBE */
+    .video-box {
+      flex: 1;
+      min-width: 320px;
+      height: 486px;
+      border: 3px solid #333;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+    }
+
+    .video-box iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* BOX CHAT XAT */
+    .chat-box {
+      width: 728px;
+      height: 486px;
+      border: 3px solid #333;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+    }
+
+    .chat-box iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
     .credits {
-      margin-top: 10px;
+      margin-top: 15px;
       font-size: 12px;
       color: #888;
       letter-spacing: 1px;
-    }
-
-    iframe {
-      border: none;
     }
   </style>
 </head>
 <body>
 
-  <div class="tv-container">
-    <!-- BARRA INFO BRANO IN ONDA -->
-    <div id="titolo-in-onda" class="song-banner">
-      MILANO ONDE RADIO - Connessione in corso...
+  <!-- BARRA TITOLO BRANO IN ONDA -->
+  <div id="titolo-in-onda" class="song-banner">
+    MILANO ONDE RADIO - Connessione in corso...
+  </div>
+
+  <div class="main-container">
+    
+    <!-- SINISTRA: PLAYER VIDEO YOUTUBE AUTOMATICO -->
+    <div class="video-box">
+      <iframe id="player-youtube" 
+              src="https://www.youtube-nocookie.com/embed?listType=search&list=music+video&autoplay=1" 
+              allow="autoplay; encrypted-media" 
+              allowfullscreen>
+      </iframe>
     </div>
 
-    <!-- VIDEO PLAYER MP4 CENTRALE (SFONDO) -->
-    <video id="video-centrale" class="tv-background-video" autoplay loop muted playsinline>
-      <source id="video-source" src="https://pinotina.github.io/PcWeb.github.io/SIMO.mp4" type="video/mp4">
-      Il tuo browser non supporta il tag video.
-    </video>
-
-    <!-- BOX CHAT XAT SOVRAPPOSTO -->
-    <div class="chat-overlay">
-      <iframe src="https://xat.com/embed/chat.php#id=220480838" width="728" height="486" allowTransparency="true"></iframe>
+    <!-- DESTRA: CHAT XAT -->
+    <div class="chat-box">
+      <iframe src="https://xat.com/embed/chat.php#id=220480838" allowTransparency="true"></iframe>
     </div>
+
   </div>
 
   <div class="credits">
     MILANO ONDE RADIO — Created by ACHILLE
   </div>
 
-  <!-- SCRIPT DI CONNESSIONE AD AZURACAST -->
+  <!-- SCRIPT PULIZIA E RICERCA VIDEO AUTOMATICA -->
   <script>
-    // MAPPA VIDEO MP4 PERSONALIZZATI SU GITHUB PAGES
-    const libreriaVideo = {
-      "default": "https://pinotina.github.io/PcWeb.github.io/SIMO.mp4"
-    };
-
     let ultimoBrano = "";
+
+    function pulisciTitoloBrano(titolo) {
+      // Rimuove tag ed estensioni che bloccano la ricerca su YouTube
+      return titolo
+        .replace(/greatest hits.*/gi, '')
+        .replace(/best songs.*/gi, '')
+        .replace(/\(hq audio\)/gi, '')
+        .replace(/\(official video\)/gi, '')
+        .replace(/\(official music video\)/gi, '')
+        .replace(/2026|2025|2024/g, '')
+        .trim();
+    }
 
     async function aggiornaBranoAzuraCast() {
       try {
@@ -130,30 +144,18 @@
         const data = await response.json();
 
         if (data && data.now_playing) {
-          const branoAttuale = data.now_playing.song.text;
-          
-          document.getElementById('titolo-in-onda').innerText = "IN ONDA SU MILANO ONDE RADIO: " + branoAttuale;
+          const branoGrezzo = data.now_playing.song.text;
+          document.getElementById('titolo-in-onda').innerText = "IN ONDA SU MILANO ONDE RADIO: " + branoGrezzo;
 
-          if (branoAttuale !== ultimoBrano) {
-            ultimoBrano = branoAttuale;
-            const branoLower = branoAttuale.toLowerCase();
-            let nuovoVideo = libreriaVideo["default"];
-
-            for (let chiave in libreriaVideo) {
-              if (chiave !== "default" && branoLower.includes(chiave)) {
-                nuovoVideo = libreriaVideo[chiave];
-                break;
-              }
-            }
-
-            const player = document.getElementById('video-centrale');
-            const source = document.getElementById('video-source');
+          if (branoGrezzo !== ultimoBrano) {
+            ultimoBrano = branoGrezzo;
             
-            if (source.src !== nuovoVideo) {
-              source.src = nuovoVideo;
-              player.load();
-              player.play();
-            }
+            // Pulisce il nome della canzone per trovare il videoclip reale
+            const titoloPulito = pulisciTitoloBrano(branoGrezzo);
+            const ricercaQuery = encodeURIComponent(titoloPulito + " official music video");
+            
+            const iframe = document.getElementById('player-youtube');
+            iframe.src = `https://www.youtube-nocookie.com/embed?listType=search&list=${ricercaQuery}&autoplay=1`;
           }
         }
       } catch (error) {
