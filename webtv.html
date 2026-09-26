@@ -20,135 +20,105 @@
       justify-content: center;
       min-height: 100vh;
       color: #fff;
-      padding: 10px;
+      overflow-x: hidden;
     }
 
-    /* BARRA SUPERIORE TITOLO BRANO */
-    .song-banner {
+    /* CONTENITORE PRINCIPALE STILE TV */
+    .tv-container {
+      position: relative;
       width: 100%;
-      max-width: 1200px;
-      background: rgba(0, 0, 0, 0.9);
-      color: #00ffcc;
-      text-align: center;
-      padding: 12px;
-      font-weight: bold;
-      font-size: 16px;
-      border: 2px solid #00ffcc;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      text-shadow: 0 0 5px #00ffcc;
-    }
-
-    /* PLAYER AUDIO DIRETTAMENTE DA AZURACAST */
-    .audio-player-box {
-      width: 100%;
-      max-width: 1200px;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-
-    audio {
-      width: 100%;
-      max-width: 600px;
-      height: 40px;
-      border-radius: 8px;
-    }
-
-    /* CONTENITORE AFFIANCATO VIDEO + CHAT */
-    .main-container {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 15px;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      max-width: 1200px;
-    }
-
-    /* CONTENITORE VIDEO MP4 */
-    .video-box {
-      flex: 1;
-      min-width: 320px;
-      height: 486px;
-      border: 3px solid #333;
-      border-radius: 12px;
+      max-width: 900px;
+      height: 600px;
+      border: 4px solid #333;
+      border-radius: 16px;
       overflow: hidden;
+      box-shadow: 0 0 30px rgba(0, 255, 204, 0.3);
       background: #000;
-      box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
     }
 
-    .video-box video {
+    /* VIDEO MP4 IN SFONDO */
+    .tv-background-video {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
+      z-index: 1;
     }
 
-    /* CONTENITORE CHAT XAT */
-    .chat-box {
-      width: 728px;
-      height: 486px;
-      border: 3px solid #333;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
-    }
-
-    .chat-box iframe {
+    /* CHAT DI XAT SOVRAPPOSTA AL VIDEO */
+    .chat-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      border: none;
+      z-index: 2;
+      background: rgba(0, 0, 0, 0.25);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
+    /* BARRA TITOLO BRANO IN ONDA IN ALTO */
+    .song-banner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      color: #00ffcc;
+      text-align: center;
+      padding: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      z-index: 3;
+      border-bottom: 2px solid #00ffcc;
+      text-shadow: 0 0 5px #00ffcc;
+    }
+
+    /* FIRMA CREDITS IN BASSO */
     .credits {
-      margin-top: 15px;
+      margin-top: 10px;
       font-size: 12px;
       color: #888;
       letter-spacing: 1px;
+    }
+
+    iframe {
+      border: none;
     }
   </style>
 </head>
 <body>
 
-  <!-- BARRA TITOLO BRANO IN ONDA -->
-  <div id="titolo-in-onda" class="song-banner">
-    MILANO ONDE RADIO - Connessione in corso...
-  </div>
-
-  <!-- STREAMING AUDIO AZURACAST IN DIRETTA -->
-  <div class="audio-player-box">
-    <audio controls autoplay>
-      <source src="https://a4.asurahosting.com/listen/milano_onde_radio/radio.mp3" type="audio/mpeg">
-      Il tuo browser non supporta il lettore audio.
-    </audio>
-  </div>
-
-  <div class="main-container">
-    
-    <!-- SINISTRA: VIDEO PLAYER MP4 AUTOMATICO -->
-    <div class="video-box">
-      <video id="video-centrale" autoplay loop muted playsinline>
-        <source id="video-source" src="https://pinotina.github.io/PcWeb.github.io/SIMO.mp4" type="video/mp4">
-        Il tuo browser non supporta il tag video.
-      </video>
+  <div class="tv-container">
+    <!-- BARRA INFO BRANO IN ONDA -->
+    <div id="titolo-in-onda" class="song-banner">
+      MILANO ONDE RADIO - Connessione in corso...
     </div>
 
-    <!-- DESTRA: CHAT XAT -->
-    <div class="chat-box">
-      <iframe src="https://xat.com/embed/chat.php#id=220480838" allowTransparency="true"></iframe>
-    </div>
+    <!-- VIDEO PLAYER MP4 CENTRALE (SFONDO) -->
+    <video id="video-centrale" class="tv-background-video" autoplay loop muted playsinline>
+      <source id="video-source" src="https://pinotina.github.io/PcWeb.github.io/SIMO.mp4" type="video/mp4">
+      Il tuo browser non supporta il tag video.
+    </video>
 
+    <!-- BOX CHAT XAT SOVRAPPOSTO -->
+    <div class="chat-overlay">
+      <iframe src="https://xat.com/embed/chat.php#id=220480838" width="728" height="486" allowTransparency="true"></iframe>
+    </div>
   </div>
 
   <div class="credits">
     MILANO ONDE RADIO — Created by ACHILLE
   </div>
 
-  <!-- SCRIPT DI AGGIORNAMENTO BRANO E VIDEO -->
+  <!-- SCRIPT DI CONNESSIONE AD AZURACAST -->
   <script>
-    // MAPPA DEI TUOI VIDEO MP4 SU GITHUB
+    // MAPPA VIDEO MP4 PERSONALIZZATI SU GITHUB PAGES
     const libreriaVideo = {
-      "whitney": "https://pinotina.github.io/PcWeb.github.io/SIMO.mp4",
       "default": "https://pinotina.github.io/PcWeb.github.io/SIMO.mp4"
     };
 
@@ -161,6 +131,7 @@
 
         if (data && data.now_playing) {
           const branoAttuale = data.now_playing.song.text;
+          
           document.getElementById('titolo-in-onda').innerText = "IN ONDA SU MILANO ONDE RADIO: " + branoAttuale;
 
           if (branoAttuale !== ultimoBrano) {
