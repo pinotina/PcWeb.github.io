@@ -1,491 +1,222 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Milano Onde Radio - Surfpage HD</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Merienda+One&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milano Onde Radio - Il Cuore della Nostra Musica</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    <style type="text/css">
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #000;
-            font-family: 'Merienda One', cursive;
-        }
+    body {
+      background-color: #120d08;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #f4e8d1;
+      padding: 10px;
+    }
 
-        body {
-            background: url('https://xatimg.com/image/fGHl9LcaBrip.gif') no-repeat center center;
-            background-size: cover;
-        }
+    .song-banner {
+      width: 100%;
+      max-width: 1550px;
+      background: rgba(30, 20, 10, 0.95);
+      color: #ffcc66;
+      text-align: center;
+      padding: 14px;
+      font-weight: bold;
+      font-size: 16px;
+      border: 2px solid #c29b38;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 5px rgba(255, 204, 102, 0.5);
+    }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    .main-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      gap: 15px;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 1550px;
+    }
 
-        .ACHILLE {
-            position: absolute;
-            top: 215px;
-            left: 595px;
-            width: 728px;  
-            height: 486px; 
-            border: 4px solid #678a5e;
-            border-radius: 12px;
-            box-sizing: border-box;
-            overflow: hidden;
-            z-index: 999;
-            transform: translateZ(0);
-            backface-visibility: hidden;
-        }
+    /* Box a Sinistra per la Cover */
+    .image-box-left {
+      width: 380px;
+      height: 540px;
+      border: 3px solid #c29b38;
+      border-radius: 15px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 0 25px rgba(194, 155, 56, 0.4);
+      flex-shrink: 0;
+      position: relative;
+    }
 
-        .ACHILLE.video-attivo {
-            background: rgba(0, 0, 0, 0.85);
-        }
+    .image-box-left img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
 
-        .ACHILLE .spot-video-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover; 
-            z-index: 2;
-            display: none; 
-        }
+    /* Box Centrale con la Chat */
+    .chat-box {
+      width: 728px;
+      height: 540px;
+      border: 3px solid #c29b38;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(194, 155, 56, 0.3);
+      background: #000;
+      flex-shrink: 0;
+    }
 
-        .ACHILLE .player-ctr {
-            height: 100%;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 10;
-            pointer-events: none;
-        }
+    .chat-box iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
 
-        .ACHILLE .fixed-logo, 
-        .ACHILLE .album-cover, 
-        .ACHILLE .controls-wrapper, 
-        .ACHILLE .track-info-serv {
-            pointer-events: auto;
-        }
+    /* Box Quadrato a Destra per il filmato del robot */
+    .video-box-right {
+      width: 380px;
+      height: 540px;
+      border: 3px solid #c29b38;
+      border-radius: 15px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 0 25px rgba(194, 155, 56, 0.4);
+      flex-shrink: 0;
+      position: relative;
+    }
 
-        .ACHILLE .fixed-logo {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            width: 55px;
-            height: 55px;
-            z-index: 15;
-            animation: spin 8s linear infinite;
-        }
+    .video-box-right video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
 
-        .ACHILLE .fixed-logo img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 50%;
-        }
+    /* Riga in basso strutturata a 3 parti per centrare i crediti sotto la chat */
+    .footer-bar {
+      width: 100%;
+      max-width: 1550px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #b89768;
+      letter-spacing: 1px;
+      padding: 0 5px;
+    }
 
-        .ACHILLE .album-cover {
-            width: 55px;
-            height: 55px;
-            background: url('https://xatimg.com/image/e6Xy8dR1ONxx.jpg') center no-repeat;
-            background-size: cover;
-            border-radius: 100%;
-            border: 2px solid #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.6);
-            z-index: 5;
-            top: 12px;
-            right: 12px;
-            position: absolute;
-            animation: spin 6s linear infinite;
-        }
+    .footer-left, .footer-right {
+      width: 380px; /* Stessa larghezza dei box laterali per bilanciare il centro */
+    }
 
-        .ACHILLE .controls-wrapper {
-            position: absolute;
-            bottom: 12px; 
-            left: 12px;   
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 15;
-        }
-     
-        .ACHILLE .ppBtn {
-            width: 34px;
-            height: 34px;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            cursor: pointer;
-            box-sizing: border-box;
-        }
+    .footer-right {
+      display: flex;
+      justify-content: flex-end;
+    }
 
-        .ACHILLE .play-btn {
-            background: #5D3FD3 url(https://i.imgur.com/0OWyaeR.png) no-repeat center center;
-            background-size: 14px 14px;
-        }
+    .credits {
+      text-align: center;
+      flex: 1;
+    }
 
-        .ACHILLE .intro-active-btn {
-            background: #27ae60 url(https://i.imgur.com/0OWyaeR.png) no-repeat center center; 
-            background-size: 14px 14px;
-        }
-
-        .ACHILLE .stop-btn {
-            background: #e74c3c url(https://i.imgur.com/M51mhy6.png) no-repeat center center; 
-            background-size: 14px 14px;
-        }
-
-        .ACHILLE .volume-container {
-            display: flex;
-            align-items: center;
-            background: rgba(0,0,0,0.6);
-            padding: 2px 10px;
-            border-radius: 20px;
-            height: 28px;
-            box-sizing: border-box;
-        }
-
-        .ACHILLE input[type=range] {
-            width: 65px;
-            height: 4px;
-            background: none;
-            -webkit-appearance: none;
-            cursor: pointer;
-            margin: 0;
-        }
-
-        .ACHILLE input[type=range]:focus { outline: none; }
-        
-        .ACHILLE input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 4px;
-            background: rgba(255,255,255,0.4);
-            border-radius: 8px;
-        }
-
-        .ACHILLE input[type=range]::-webkit-slider-thumb {
-            width: 10px;
-            height: 10px;
-            background: #5D3FD3;
-            border: 1px solid #fff;
-            border-radius: 50%;
-            -webkit-appearance: none;
-            margin-top: -3px;
-        }
-
-        .ACHILLE .icons-right {
-            width: 14px;
-            height: 14px;
-            margin-right: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-       
-        .ACHILLE .icons-volume1:before { content: url(https://i.imgur.com/czc12uI.png); transform: scale(0.45); display: block; }
-        .ACHILLE .icons-volume3:before { content: url(https://i.imgur.com/98kWjzj.png); transform: scale(0.45); display: block; }
-
-        .ACHILLE .track-info-serv {
-            width: 215px;
-            height: 28px;
-            position: absolute;
-            bottom: 12px; 
-            left: 145px;  
-            overflow: hidden;
-            z-index: 12;
-            background: rgba(0,0,0,0.6);
-            padding: 3px 10px;
-            border-radius: 20px; 
-            box-sizing: border-box;
-            display: flex;
-            align-items: center;
-        }
-
-        .ACHILLE .track-info-ctr {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ACHILLE .songtitle, .ACHILLE .artist-name {
-            font-size: 11px;
-            font-weight: 400;
-            color: #FFF;
-            text-transform: uppercase;
-            text-shadow: 1px 1px 2px #000;
-        }
-
-        .ACHILLE .artist-name { 
-            color: #5D3FD3; 
-            margin-right: 4px;
-        }
-
-        .ACHILLE .servertitle {
-            font-size: 18px;
-            color: #5D3FD3;
-            position: absolute;
-            top: 15px;
-            left: 78px;
-            margin: 0;
-            text-shadow: -1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF;
-            z-index: 16;
-        }
-
-        .ACHILLE .listeners {
-            font-size: 13px;
-            color: rgba(255,255,255,.9);
-            position: absolute;
-            top: 42px;
-            left: 78px;
-            text-shadow: 0 0 5px #000;
-            display: flex;
-            align-items: center;
-            z-index: 9;
-        }
-
-        .ACHILLE .listeners:before {
-            content: url('https://i.imgur.com/2qrHu3E.png');
-            margin-right: 4px;
-            transform: scale(0.5);
-            display: inline-block;
-        }
-
-        .xat-box {
-            width: 100%;  
-            height: 100%; 
-            background: transparent;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1; 
-        }
-
-        .nodisplay { display: none !important; }
-
-        .marquee {
-            white-space: nowrap;
-            position: absolute;
-            width: auto;
-            animation: movement-smooth 14s linear infinite;
-        }
-
-        @keyframes movement-smooth {
-            from { transform: translateX(215px); } 
-            to { transform: translateX(-100%); }
-        }
-    </style>
+    .online-counter {
+      color: #ffcc66;
+      font-weight: bold;
+      background: rgba(30, 20, 10, 0.95);
+      border: 1px solid #c29b38;
+      padding: 6px 12px;
+      border-radius: 8px;
+      text-shadow: 0 0 4px rgba(255, 204, 102, 0.4);
+    }
+  </style>
 </head>
 <body>
 
-    <div class="ACHILLE" id="stream1">
-        <video class="spot-video-layer" id="spotVideo" playsinline loop muted></video>
+  <!-- Striscia in alto centrata -->
+  <div id="titolo-in-onda" class="song-banner">
+    MILANO ONDE RADIO - Connessione in corso...
+  </div>
 
-        <div class="xat-box"></div>
-
-        <div class="fixed-logo">
-            <img src="https://xatimg.com/image/e6Xy8dR1ONxx.jpg" alt="Logo">
-        </div>
-
-        <div class="player-ctr">
-            <div class="servertitle">Milano Onde Radio</div>
-            <div class="album-cover"></div>
-            <div class="listeners">0</div>
-            
-            <div class="controls-wrapper">
-                <div class="ppBtn play-btn"></div>
-                <div class="volume-container">
-                    <div class="icons-right icons-volume icons-volume3"></div>
-                    <input class="volume-slider" type="range" min="0" max="100" step="1" value="95">
-                </div>
-            </div>
-        </div>
-
-        <div class="track-info-serv">
-            <div class="track-info-ctr">
-                <div class="marquee">
-                    <span class="artist-name">In attesa...</span>
-                    <span class="songtitle"></span>
-                </div>
-            </div>
-        </div>
+  <div class="main-container">
+   
+    <!-- BOX A SINISTRA: Cover del brano in onda -->
+    <div class="image-box-left">
+      <img id="cover-artista" src="" alt="Cover Brano">
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript">
-    (function ($) {
-        $.fn.icast = function (options) {
-            var settings = $.extend({
-                streamURL: "https://a4.asurahosting.com:6980/radio.mp3",
-                apiURL: "https://a4.asurahosting.com/api/nowplaying/342",
-                presentationURL: "https://milanonderadio.org/mp.mp4",
-                audioIntroURL: "https://milanonderadio.org/sigla.mp3"
-            }, options);
+    <!-- BOX CENTRALE CON LA CHAT -->
+    <div class="chat-box">
+      <iframe src="https://xat.com/embed/chat.php#gn=milano_radio" allowTransparency="true"></iframe>
+    </div>
 
-            var thisObj = this;
-            
-            var audio = new Audio();
-            audio.volume = 0.95;
+    <!-- BOX QUADRATO A DESTRA: Filmato mp4 del robot -->
+    <div class="video-box-right">
+      <video autoplay loop muted playsinline>
+        <source src="https://pinotina.github.io/PcWeb.github.io/PixVerse_Seedance-2.0-standard_Image_Text_1080.mp4" type="video/mp4">
+      </video>
+    </div>
 
-            var presentazioneAudio = new Audio();
-            presentazioneAudio.volume = 0.85;
-            presentazioneAudio.loop = true; 
-            presentazioneAudio.src = settings.audioIntroURL;
+  </div>
 
-            var $videoEl = $("#spotVideo");
-            var videoDom = $videoEl[0];
-            videoDom.src = settings.presentationURL;
+  <!-- Riga in basso con crediti perfettamente centrati sotto la chat -->
+  <div class="footer-bar">
+    <div class="footer-left"></div>
+    <div class="credits">
+      MILANO ONDE RADIO — Created by ACHILLE
+    </div>
+    <div class="footer-right">
+      <div id="ascoltatori-online" class="online-counter">
+        Ascoltatori online: Caricamento...
+      </div>
+    </div>
+  </div>
 
-            var cscover = $(".album-cover", thisObj);
-            var csTitle = $(".songtitle", thisObj);
-            var csArtist = $(".artist-name", thisObj);
-            var playBtn = $(".ppBtn", thisObj);
-            var cVolumeSlider = $(".volume-slider", thisObj);
-            var cVolumeIcon = $(".icons-volume", thisObj);
-            var current_title = "";
-            var defaultCover = "https://xatimg.com/image/e6Xy8dR1ONxx.jpg";
-            
-            var statoInterruttore = "off"; 
+  <script>
+    async function aggiornaBranoAzuraCast() {
+      try {
+        const response = await fetch('https://a4.asurahosting.com/api/nowplaying/milano_onde_radio');
+        const data = await response.json();
 
-            playBtn.on("click tap", function () {
-                if (statoInterruttore === "off") {
-                    statoInterruttore = "intro";
-                    $(this).removeClass("play-btn").addClass("intro-active-btn");
-                    thisObj.addClass("video-attivo");
-                    audio.pause();
-                    audio.src = ""; 
-                    $videoEl.show();
-                    videoDom.currentTime = 0;
-                    presentazioneAudio.currentTime = 0;
-                    videoDom.play().catch(function(e){});
-                    presentazioneAudio.play().catch(function(e) { console.log("Errore spot:", e); });
-                } else if (statoInterruttore === "intro") {
-                    statoInterruttore = "radio";
-                    $(this).removeClass("intro-active-btn").addClass("stop-btn");
-                    thisObj.removeClass("video-attivo");
-                    presentazioneAudio.pause();
-                    videoDom.pause();
-                    $videoEl.hide(); 
-                    audio.src = settings.streamURL + "?inline=" + Date.now();
-                    audio.load();
-                    audio.play().catch(function(e) { console.log("Errore radio:", e); });
-                } else if (statoInterruttore === "radio") {
-                    statoInterruttore = "intro";
-                    $(this).removeClass("stop-btn").addClass("intro-active-btn");
-                    thisObj.addClass("video-attivo");
-                    audio.pause();
-                    audio.src = ""; 
-                    $videoEl.show();
-                    videoDom.currentTime = 0;
-                    presentazioneAudio.currentTime = 0;
-                    videoDom.play().catch(function(e){});
-                    presentazioneAudio.play().catch(function(e) { console.log("Errore riavvio spot:", e); });
-                }
-            });
+        if (data && data.now_playing) {
+          const branoAttuale = data.now_playing.song.text;
+          const copertinaUrl = data.now_playing.song.art;
+          const ascoltatori = data.listeners ? data.listeners.current : 0;
 
-            $(audio).on("ended error", function() {
-                if (statoInterruttore === "radio") {
-                    audio.src = settings.streamURL + "?inline=" + Date.now();
-                    audio.load();
-                    audio.play().catch(function(e){});
-                }
-            });
+          document.getElementById('titolo-in-onda').innerText = "IN ONDA TRA NOI: " + branoAttuale;
+          document.getElementById('ascoltatori-online').innerText = "Ascoltatori online: " + ascoltatori;
 
-            cVolumeSlider.on("input change", function () {
-                var vol = $(this).val() / 100;
-                audio.volume = vol;
-                presentazioneAudio.volume = vol;
-                if (vol == 0) {
-                    cVolumeIcon.removeClass("icons-volume3").addClass("icons-volume1");
-                } else {
-                    cVolumeIcon.removeClass("icons-volume1").addClass("icons-volume3");
-                }
-            });
+          if (copertinaUrl) {
+            document.getElementById('cover-artista').src = copertinaUrl;
+          }
+        }
+      } catch (error) {
+        console.error("Errore di connessione ad AzuraCast:", error);
+      }
+    }
 
-            cVolumeIcon.on("click tap", function () {
-                if ($(this).hasClass("icons-volume3")) {
-                    $(this).removeClass("icons-volume3").addClass("icons-volume1");
-                    cVolumeSlider.val(0);
-                    audio.volume = 0;
-                    presentazioneAudio.volume = 0;
-                } else {
-                    $(this).removeClass("icons-volume1").addClass("icons-volume3");
-                    cVolumeSlider.val(95);
-                    audio.volume = 0.95;
-                    presentazioneAudio.volume = 0.85;
-                }
-            });
+    setInterval(aggiornaBranoAzuraCast, 5000);
+    aggiornaBranoAzuraCast();
+  </script>
 
-            function updateMetadata() {
-                $.ajax({
-                    url: settings.apiURL,
-                    dataType: "json",
-                    cache: false,
-                    success: function (data) {
-                        if (data && data.now_playing && data.now_playing.song) {
-                            var song = data.now_playing.song;
-                            var title = song.title;
-                            var artist = song.artist;
-                            var serverArt = song.art; 
-                            var listeners = data.listeners.current;
-
-                            $(".listeners", thisObj).text(listeners);
-
-                            if (current_title !== title) {
-                                current_title = title;
-                                csTitle.text(title);
-                                csArtist.text(artist ? artist + " - " : "");
-
-                                if (serverArt && serverArt !== "" && !serverArt.includes("generic")) {
-                                    cscover.css("background-image", "url('" + serverArt + "')");
-                                } else {
-                                    var searchTerm = (artist + " " + title).trim();
-                                    $.ajax({
-                                        url: "https://itunes.apple.com/search",
-                                        data: {
-                                            term: searchTerm,
-                                            media: "music",
-                                            limit: 1
-                                        },
-                                        dataType: "jsonp",
-                                        success: function (itunesData) {
-                                            if (itunesData.results && itunesData.results.length > 0) {
-                                                var artworkUrl = itunesData.results[0].artworkUrl100.replace("100x100bb", "500x500bb");
-                                                cscover.css("background-image", "url('" + artworkUrl + "')");
-                                            } else {
-                                                cscover.css("background-image", "url('" + defaultCover + "')");
-                                            }
-                                        },
-                                        error: function() {
-                                            cscover.css("background-image", "url('" + defaultCover + "')");
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    },
-                    error: function() {
-                        console.log("Impossibile recuperare i metadati radio.");
-                    }
-                });
-            }
-
-            updateMetadata();
-            setInterval(updateMetadata, 10000); 
-
-            if (/Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent)) {
-                $(cVolumeSlider).addClass("nodisplay");
-            }
-        };
-    })(jQuery);
-
-    $("#stream1").icast({});
-    </script>
 </body>
 </html>
