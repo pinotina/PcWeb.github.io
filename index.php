@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milano Onde Radio - Il Cuore della Nostra Musica</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #120d08;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #f4e8d1;
+      padding: 10px;
+    }
+
+    .song-banner {
+      width: 100%;
+      max-width: 1550px;
+      background: rgba(30, 20, 10, 0.95);
+      color: #ffcc66;
+      text-align: center;
+      padding: 14px;
+      font-weight: bold;
+      font-size: 16px;
+      border: 2px solid #c29b38;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 5px rgba(255, 204, 102, 0.5);
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      gap: 15px;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 1550px;
+    }
+
+    /* Box a Sinistra per la Cover */
+    .image-box-left {
+      width: 380px;
+      height: 540px;
+      border: 3px solid #c29b38;
+      border-radius: 15px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 0 25px rgba(194, 155, 56, 0.4);
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .image-box-left img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    /* Box Centrale con la Chat */
+    .chat-box {
+      width: 728px;
+      height: 540px;
+      border: 3px solid #c29b38;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(194, 155, 56, 0.3);
+      background: #000;
+      flex-shrink: 0;
+    }
+
+    .chat-box iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Box Quadrato a Destra per il filmato del robot */
+    .video-box-right {
+      width: 380px;
+      height: 540px;
+      border: 3px solid #c29b38;
+      border-radius: 15px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 0 25px rgba(194, 155, 56, 0.4);
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .video-box-right video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    /* Riga in basso strutturata a 3 parti per centrare i crediti sotto la chat */
+    .footer-bar {
+      width: 100%;
+      max-width: 1550px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #b89768;
+      letter-spacing: 1px;
+      padding: 0 5px;
+    }
+
+    .footer-left, .footer-right {
+      width: 380px; /* Stessa larghezza dei box laterali per bilanciare il centro */
+    }
+
+    .footer-right {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .credits {
+      text-align: center;
+      flex: 1;
+    }
+
+    .online-counter {
+      color: #ffcc66;
+      font-weight: bold;
+      background: rgba(30, 20, 10, 0.95);
+      border: 1px solid #c29b38;
+      padding: 6px 12px;
+      border-radius: 8px;
+      text-shadow: 0 0 4px rgba(255, 204, 102, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Striscia in alto centrata -->
+  <div id="titolo-in-onda" class="song-banner">
+    MILANO ONDE RADIO - Connessione in corso...
+  </div>
+
+  <div class="main-container">
+   
+    <!-- BOX A SINISTRA: Cover del brano in onda -->
+    <div class="image-box-left">
+      <img id="cover-artista" src="" alt="Cover Brano">
+    </div>
+
+    <!-- BOX CENTRALE CON LA CHAT -->
+    <div class="chat-box">
+      <iframe src="https://xat.com/embed/chat.php#gn=milano_radio" allowTransparency="true"></iframe>
+    </div>
+
+    <!-- BOX QUADRATO A DESTRA: Filmato mp4 del robot -->
+    <div class="video-box-right">
+      <video autoplay loop muted playsinline>
+        <source src="https://pinotina.github.io/PcWeb.github.io/PixVerse_Seedance-2.0-standard_Image_Text_1080.mp4" type="video/mp4">
+      </video>
+    </div>
+
+  </div>
+
+  <!-- Riga in basso con crediti perfettamente centrati sotto la chat -->
+  <div class="footer-bar">
+    <div class="footer-left"></div>
+    <div class="credits">
+      MILANO ONDE RADIO — Created by ACHILLE
+    </div>
+    <div class="footer-right">
+      <div id="ascoltatori-online" class="online-counter">
+        Ascoltatori online: Caricamento...
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function aggiornaBranoAzuraCast() {
+      try {
+        const response = await fetch('https://a4.asurahosting.com/api/nowplaying/milano_onde_radio');
+        const data = await response.json();
+
+        if (data && data.now_playing) {
+          const branoAttuale = data.now_playing.song.text;
+          const copertinaUrl = data.now_playing.song.art;
+          const ascoltatori = data.listeners ? data.listeners.current : 0;
+
+          document.getElementById('titolo-in-onda').innerText = "IN ONDA TRA NOI: " + branoAttuale;
+          document.getElementById('ascoltatori-online').innerText = "Ascoltatori online: " + ascoltatori;
+
+          if (copertinaUrl) {
+            document.getElementById('cover-artista').src = copertinaUrl;
+          }
+        }
+      } catch (error) {
+        console.error("Errore di connessione ad AzuraCast:", error);
+      }
+    }
+
+    setInterval(aggiornaBranoAzuraCast, 5000);
+    aggiornaBranoAzuraCast();
+  </script>
+
+</body>
+</html>
