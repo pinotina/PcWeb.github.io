@@ -5,14 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Milano Onde Radio - Il Cuore della Nostra Musica</title>
   <style>
+    :root {
+      --body-top: #dcdcdc; --body-mid: #a8a8a8; --body-bot: #606060;
+      --body-shine: rgba(255,255,255,0.18); --body-dark: rgba(0,0,0,0.55);
+      --border-c: rgba(255,255,255,0.25);
+    }
+    [data-c="black"] { --body-top: #3a3a3a; --body-mid: #161616; --body-bot: #020202; --body-dark: rgba(0,0,0,0.8); }
+    [data-c="blue"] { --body-top: #6fb3e8; --body-mid: #2a72c3; --body-bot: #0d3a7a; }
+    [data-c="red"] { --body-top: #e87070; --body-mid: #c01818; --body-bot: #5a0000; }
+    [data-c="green"] { --body-top: #70c870; --body-mid: #1a881a; --body-bot: #064006; }
+    [data-c="pink"] { --body-top: #f9a8d4; --body-mid: #ec4899; --body-bot: #831843; }
+    [data-c="purple"] { --body-top: #c084fc; --body-mid: #7c3aed; --body-bot: #2e1065; }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
+    /* Sfondo video con la città e le nuvole scorrevoli */
+    .bg-video-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .bg-video-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     body {
-      background-color: #120d08;
+      background-color: transparent !important;
       font-family: Arial, sans-serif;
       display: flex;
       flex-direction: column;
@@ -21,22 +50,140 @@
       min-height: 100vh;
       color: #f4e8d1;
       padding: 10px;
+      transition: background 0.5s ease;
+      overflow: hidden;
     }
 
-    .song-banner {
+    .dashboard-container {
+      position: relative;
       width: 100%;
       max-width: 1550px;
-      background: rgba(30, 20, 10, 0.95);
+      background: linear-gradient(180deg, var(--body-top) 0%, var(--body-mid) 20%, var(--body-mid) 80%, var(--body-bot) 100%);
+      border-radius: 30px;
+      border: 2px solid #c29b38;
+      box-shadow: inset 0 7px 16px var(--body-shine), inset 0 -9px 20px var(--body-dark), 0 28px 60px rgba(0,0,0,0.7);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      transition: all .55s ease;
+    }
+
+    /* Barra del titolo ben visibile sopra i faretti */
+    .song-banner {
+      width: 100%;
+      background: rgba(20, 12, 5, 0.95);
       color: #ffcc66;
       text-align: center;
-      padding: 14px;
+      padding: 10px;
       font-weight: bold;
       font-size: 16px;
       border: 2px solid #c29b38;
       border-radius: 10px;
-      margin-bottom: 20px;
-      text-shadow: 0 0 5px rgba(255, 204, 102, 0.5);
+      text-shadow: 0 0 8px rgba(255, 204, 102, 0.8);
+      z-index: 20;
     }
+
+    /* Struttura dei faretti (truss) in alto */
+    .truss-full-top {
+      position: relative;
+      width: 100%;
+      height: 42px;
+      background: 
+        radial-gradient(circle, rgba(255,150,0,0.15) 10%, transparent 11%),
+        linear-gradient(90deg, #1f1818 0%, #3d2f2f 50%, #1f1818 100%);
+      background-size: 16px 16px, 100% 100%;
+      border-top: 3px solid #885533;
+      border-bottom: 3px solid #885533;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.9);
+      z-index: 15;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 6px;
+      margin-bottom: 5px;
+    }
+
+    .spotlight-head {
+      position: relative;
+      width: 40px;  
+      height: 36px; 
+      background: radial-gradient(circle, #332211 40%, #110800 90%);
+      border-radius: 50%;
+      border: 2.5px solid #553311;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.9), 0 3px 6px rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .spotlight-lens {
+      width: 26px;  
+      height: 26px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff 10%, #ffccaa 50%, #aa5522 90%);
+      border: 1px solid #221100;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .spotlight-lens::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #ff3300;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #ff3300, 0 0 16px currentColor;
+    }
+
+    /* Fasci di luce allungati che illuminano tutta la console e la chat[cite: 6] */
+    .beam {
+      position: absolute;
+      left: calc(50% - 75px);
+      top: 35px;
+      width: 150px;
+      height: 600px;
+      pointer-events: none;
+      z-index: 5;
+      mix-blend-mode: screen;
+      filter: blur(2px);
+      transform-origin: top center;
+      clip-path: polygon(44% 0, 0 100%, 100% 100%, 56% 0);
+    }
+
+    .beam-laser   { background: linear-gradient(to bottom, rgba(255,100,0,0.9), rgba(255,100,0,0.2) 60%, transparent); }
+    .beam-lime    { background: linear-gradient(to bottom, rgba(255,200,0,0.9), rgba(255,200,0,0.2) 60%, transparent); }
+    .beam-purple  { background: linear-gradient(to bottom, rgba(255,0,100,0.9), rgba(255,0,100,0.2) 60%, transparent); }
+    .beam-orange  { background: linear-gradient(to bottom, rgba(150,0,255,0.9), rgba(150,0,255,0.2) 60%, transparent); }
+    .beam-cyan    { background: linear-gradient(to bottom, rgba(255,0,200,0.9), rgba(255,0,200,0.2) 60%, transparent); }
+    .beam-pink    { background: linear-gradient(to bottom, rgba(255,50,50,0.9), rgba(255,50,50,0.2) 60%, transparent); }
+    .beam-yellow  { background: linear-gradient(to bottom, rgba(255,255,0,0.9), rgba(255,255,0,0.2) 60%, transparent); }
+    .beam-red     { background: linear-gradient(to bottom, rgba(255,150,50,0.9), rgba(255,150,50,0.2) 60%, transparent); }
+
+    .beam-1 { animation: strobeSlow 0.7s ease-in-out infinite, moveSmooth1 4.5s ease-in-out infinite alternate; }
+    .beam-2 { animation: strobeSlow 0.9s ease-in-out infinite 0.2s, moveSmooth2 5.0s ease-in-out infinite alternate 0.3s; }
+    .beam-3 { animation: strobeSlow 0.8s ease-in-out infinite 0.4s, moveSmooth3 4.2s ease-in-out infinite alternate 0.1s; }
+    .beam-4 { animation: strobeSlow 1.0s ease-in-out infinite 0.1s, moveSmooth4 4.8s ease-in-out infinite alternate 0.5s; }
+    .beam-5 { animation: strobeSlow 0.85s ease-in-out infinite 0.3s, moveSmooth2 4.6s ease-in-out infinite alternate 0.2s; }
+    .beam-6 { animation: strobeSlow 0.75s ease-in-out infinite 0.5s, moveSmooth1 5.2s ease-in-out infinite alternate 0.4s; }
+    .beam-7 { animation: strobeSlow 0.95s ease-in-out infinite 0.15s, moveSmooth4 4.3s ease-in-out infinite alternate 0.6s; }
+    .beam-8 { animation: strobeSlow 0.8s ease-in-out infinite 0.35s, moveSmooth3 4.9s ease-in-out infinite alternate 0.15s; }
+
+    @keyframes strobeSlow {
+      0%   { opacity: 0.2; filter: brightness(0.8); }
+      50%  { opacity: 0.85; filter: brightness(2.0) drop-shadow(0 0 20px currentColor); }
+      100% { opacity: 0.2; filter: brightness(0.8); }
+    }
+
+    @keyframes moveSmooth1 { 0% { transform: rotate(-22deg); } 100% { transform: rotate(22deg); } }
+    @keyframes moveSmooth2 { 0% { transform: rotate(20deg); } 100% { transform: rotate(-20deg); } }
+    @keyframes moveSmooth3 { 0% { transform: rotate(-16deg); } 100% { transform: rotate(25deg); } }
+    @keyframes moveSmooth4 { 0% { transform: rotate(18deg); } 100% { transform: rotate(-22deg); } }
 
     .main-container {
       display: flex;
@@ -46,10 +193,10 @@
       justify-content: center;
       align-items: center;
       width: 100%;
-      max-width: 1550px;
+      z-index: 10;
     }
 
-    /* Box a Sinistra per la Cover */
+    /* Box a Sinistra: Logo + Wsmider Ingrandito */
     .image-box-left {
       width: 380px;
       height: 540px;
@@ -60,15 +207,64 @@
       box-shadow: 0 0 25px rgba(194, 155, 56, 0.4);
       flex-shrink: 0;
       position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
     }
 
-    .image-box-left img {
+    .image-box-left img#cover-artista {
       width: 100%;
-      height: 100%;
+      height: 330px;
       object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid #c29b38;
+    }
+
+    .wsmider-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,0,0,0.8);
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #c29b38;
+    }
+
+    .wsmider-label {
+      font-size: 11px;
+      font-weight: bold;
+      color: #ffcc66;
+      letter-spacing: 1.5px;
+    }
+
+    .vu-meter {
+      position: relative;
+      width: 100%;
+      height: 105px;
+      border: 2px solid #c29b38;
+      border-radius: 6px;
+      background: #111;
+      overflow: hidden;
+      background-image: url('https://i.imgur.com/cBXsvc1.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .needle {
       position: absolute;
-      top: 0;
-      left: 0;
+      bottom: -6px;
+      left: 50%;
+      width: 2px;
+      height: 95px;
+      background: #ff0000;
+      transform-origin: bottom center;
+      transform: rotate(-58deg);
+      transition: transform 0.08s ease-out;
     }
 
     /* Box Centrale con la Chat */
@@ -111,32 +307,37 @@
       left: 0;
     }
 
-    /* Riga in basso strutturata a 3 parti per centrare i crediti sotto la chat */
+    /* Riga in basso */
     .footer-bar {
       width: 100%;
-      max-width: 1550px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 20px;
+      margin-top: 10px;
       font-size: 13px;
-      color: #b89768;
+      color: #332200;
+      font-weight: bold;
       letter-spacing: 1px;
       padding: 0 5px;
+      z-index: 10;
     }
 
     .footer-left, .footer-right {
-      width: 380px; /* Stessa larghezza dei box laterali per bilanciare il centro */
+      width: 380px;
     }
 
     .footer-right {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
+      gap: 15px;
     }
 
     .credits {
       text-align: center;
       flex: 1;
+      color: #ffcc66;
+      text-shadow: 0 0 4px rgba(0,0,0,0.8);
     }
 
     .online-counter {
@@ -148,50 +349,123 @@
       border-radius: 8px;
       text-shadow: 0 0 4px rgba(255, 204, 102, 0.4);
     }
+
+    .color-picker-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    .dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
+    }
+    .dot:hover {
+      transform: scale(1.15);
+    }
   </style>
 </head>
-<body>
+<body data-c="silver">
 
-  <!-- Striscia in alto centrata -->
-  <div id="titolo-in-onda" class="song-banner">
-    MILANO ONDE RADIO - Connessione in corso...
+  <!-- Sfondo video con la città e le nuvole scorrevoli -->
+  <div class="bg-video-container">
+    <video autoplay loop muted playsinline>
+      <source src="https://video.wixstatic.com/video/11062b_2ccb88c1c6de4151b51879d6c90fca9d/1080p/mp4/file.mp4" type="video/mp4" />
+    </video>
   </div>
 
-  <div class="main-container">
-   
-    <!-- BOX A SINISTRA: Cover del brano in onda -->
-    <div class="image-box-left">
-      <img id="cover-artista" src="" alt="Cover Brano">
+  <div class="dashboard-container">
+
+    <!-- Titolo del brano in onda ben visibile -->
+    <div id="titolo-in-onda" class="song-banner">
+      MILANO ONDE RADIO - Connessione in corso...
     </div>
 
-    <!-- BOX CENTRALE CON LA CHAT -->
-    <div class="chat-box">
-      <iframe src="https://xat.com/embed/chat.php#gn=milano_radio" allowTransparency="true"></iframe>
+    <!-- Barra superiore con i faretti e fasci di luce lunghi che coprono la chat -->
+    <div class="truss-full-top">
+      <div class="spotlight-head"><div class="spotlight-lens"></div><div class="beam beam-laser beam-1"></div></div>
+      <div class="spotlight-head"><div class="spotlight-lens"></div><div class="beam beam-lime beam-2"></div></div>
+      <div class="spotlight-head"><div class="spotlight-lens"></div><div class="beam beam-purple beam-3"></div></div>
+      <div class="spotlight-head"><div class="spotlight-lens"></div><div class="beam beam-orange beam-4"></div></div>
+      <div class="spotlight-head"><div class="spotlight-lens"></div><div class="beam beam-cyan beam-5"></div></div>
+      <div class="spotlight-head"><div class="spotlight-lens"></div><div class="beam beam-pink beam-6"></div></div>
+      <div class="spotlight-head"><div class="spotlight-lens"></div><div class="beam beam-yellow beam-7"></div></div>
+      <div class="spotlight-head"><div class="spotlight-lens"></div><div class="beam beam-red beam-8"></div></div>
     </div>
 
-    <!-- BOX QUADRATO A DESTRA: Filmato mp4 del robot -->
-    <div class="video-box-right">
-      <video autoplay loop muted playsinline>
-        <source src="https://pinotina.github.io/PcWeb.github.io/PixVerse_Seedance-2.0-standard_Image_Text_1080.mp4" type="video/mp4">
-      </video>
+    <div class="main-container">
+     
+      <!-- BOX A SINISTRA: Logo Ufficiale + Wsmider Ingrandito -->
+      <div class="image-box-left">
+        <img id="cover-artista" src="https://xatimg.com/image/TDqhlh9u1Lg6.png" alt="Logo Milano Onde Radio">
+        
+        <div class="wsmider-container">
+          <span class="wsmider-label">WSMIDER • MUSIC BEAT METER</span>
+          <div class="vu-meter">
+            <div id="nL" class="needle"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOX CENTRALE CON LA CHAT -->
+      <div class="chat-box">
+        <iframe src="https://xat.com/embed/chat.php#gn=milano_radio" allowTransparency="true"></iframe>
+      </div>
+
+      <!-- BOX QUADRATO A DESTRA: Filmato mp4 del robot -->
+      <div class="video-box-right">
+        <video autoplay loop muted playsinline>
+          <source src="https://pinotina.github.io/PcWeb.github.io/PixVerse_Seedance-2.0-standard_Image_Text_1080.mp4" type="video/mp4">
+        </video>
+      </div>
+
     </div>
 
-  </div>
-
-  <!-- Riga in basso con crediti perfettamente centrati sotto la chat -->
-  <div class="footer-bar">
-    <div class="footer-left"></div>
-    <div class="credits">
-      MILANO ONDE RADIO — Created by ACHILLE
-    </div>
-    <div class="footer-right">
-      <div id="ascoltatori-online" class="online-counter">
-        Ascoltatori online: Caricamento...
+    <!-- Riga in basso con crediti, selettore colori e contatore -->
+    <div class="footer-bar">
+      <div class="footer-left">
+        <div class="color-picker-container">
+          <div class="dot" style="background:#dcdcdc" onclick="changeColor('silver')" title="Silver"></div>
+          <div class="dot" style="background:#161616" onclick="changeColor('black')" title="Black"></div>
+          <div class="dot" style="background:#2a72c3" onclick="changeColor('blue')" title="Blue"></div>
+          <div class="dot" style="background:#c01818" onclick="changeColor('red')" title="Red"></div>
+          <div class="dot" style="background:#1a881a" onclick="changeColor('green')" title="Green"></div>
+          <div class="dot" style="background:#ec4899" onclick="changeColor('pink')" title="Pink"></div>
+          <div class="dot" style="background:#7c3aed" onclick="changeColor('purple')" title="Purple"></div>
+        </div>
+      </div>
+      <div class="credits">
+        MILANO ONDE RADIO — Created by ACHILLE
+      </div>
+      <div class="footer-right">
+        <div id="ascoltatori-online" class="online-counter">
+          Ascoltatori online: Caricamento...
+        </div>
       </div>
     </div>
+
   </div>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
+    function changeColor(color) { 
+      document.body.setAttribute('data-c', color); 
+    }
+
+    // Movimento dinamico della lancetta dello strumento wsmider
+    function animateNeedle() {
+      let beatValue = -45 + Math.random() * 65;
+      document.getElementById('nL').style.transform = `rotate(${beatValue}deg)`;
+      setTimeout(animateNeedle, 130);
+    }
+    animateNeedle();
+
+    // Aggiornamento brani e ascoltatori da AzuraCast
     async function aggiornaBranoAzuraCast() {
       try {
         const response = await fetch('https://a4.asurahosting.com/api/nowplaying/milano_onde_radio');
