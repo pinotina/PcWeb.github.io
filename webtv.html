@@ -39,7 +39,7 @@
       text-shadow: 0 0 5px #00ffcc;
     }
 
-    /* CONTENITORE AFFIANCATO VIDEO + CHAT */
+    /* CONTENITORE AFFIANCATO IMMAGINE + CHAT */
     .main-container {
       display: flex;
       flex-direction: row;
@@ -51,8 +51,8 @@
       max-width: 1200px;
     }
 
-    /* BOX VIDEO MP4 */
-    .video-box {
+    /* BOX GIF A SINISTRA */
+    .image-box {
       flex: 1;
       min-width: 320px;
       height: 486px;
@@ -61,12 +61,16 @@
       overflow: hidden;
       background: #000;
       box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+      position: relative;
     }
 
-    .video-box video {
+    .image-box img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
     /* BOX CHAT XAT */
@@ -102,12 +106,9 @@
 
   <div class="main-container">
     
-    <!-- SINISTRA: IL TUO FILMATO MP4 DELL'AUTO TRANSFORMER -->
-    <div class="video-box">
-      <video id="video-centrale" autoplay loop muted playsinline>
-        <source src="https://pinotina.github.io/PcWeb.github.io/PixVerse_Seedance-2.0-standard_Image_Text_1080.mp4" type="video/mp4">
-        Il tuo browser non supporta il tag video.
-      </video>
+    <!-- SINISTRA: GIF PERSONALIZZATA -->
+    <div class="image-box">
+      <img src="https://xatimg.com/image/tSLGL0rAyAl2.gif" alt="Animazione Sinistra">
     </div>
 
     <!-- DESTRA: CHAT XAT "Milano_Radio" CON RADIO INTEGRATA -->
