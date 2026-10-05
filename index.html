@@ -2,7 +2,8 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Milano Onde Radio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milano Onde Radio - Dashboard</title>
     <style>
         html, body {
             margin: 0;
@@ -22,14 +23,28 @@
             min-height: 100% !important;
             object-fit: cover !important;
             object-position: center center !important;
-            /* Il trucco magico: ingrandisce impercettibilmente il video (2%) */
-            /* Così quando si fa zoom, Xat non riesce a scoprire i bordi neri sotto */
-            transform: scale(1.02); 
-            z-index: -100 !important;
+            transform: scale(1.02);
+            z-index: -1;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 20vh;
         }
     </style>
 </head>
 <body>
-    <video src="https://xatradio.github.io/PcWeb.github.io/lory.mp4" autoplay loop muted playsinline></video>
+
+    <!-- Sfondo video corretto -->
+    <video src="lory.mp4" autoplay loop muted playsinline></video>
+
+    <div class="content">
+        <h1>Milano Onde Radio</h1>
+        <p>In onda con ACHILLE</p>
+    </div>
+
 </body>
 </html>
