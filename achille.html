@@ -2,43 +2,76 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACHILLE - Milano Onde Radio</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
+        }
+        body, html {
             margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             background-color: #000;
             color: #fff;
             font-family: Arial, sans-serif;
         }
-        .video-container {
+        /* Sfondo video a schermo intero */
+        .video-bg {
             position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
             z-index: -1;
         }
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        /* Contenuto della pagina (radio, chat, scritte) */
+        .content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3); /* Leggera velatura per leggere meglio i testi */
+        }
+        header {
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
     </style>
 </head>
 <body>
 
-    <!-- Sfondo video che punta direttamente al tuo server -->
-    <div class="video-container">
-        <video autoplay muted loop playsinline>
-            <source src="http://milanonderadio.org:8080/video/bolton.mp4" type="video/mp4">
-            Il tuo browser non supporta il tag video.
-        </video>
-    </div>
+    <!-- Video di sfondo che pesca direttamente dal tuo server -->
+    <video class="video-bg" autoplay muted loop playsinline>
+        <source src="http://milanonderadio.org:8080/video/bolton.mp4" type="video/mp4">
+        Il tuo browser non supporta il tag video.
+    </video>
 
-    <!-- Qui dentro puoi incollare il resto della tua grafica, chat e riquadri -->
-    <div style="position: relative; z-index: 1; padding: 20px;">
-        <h1>ACHILLE - Milano Onde Radio</h1>
-        <p>La radio è online e i video caricano correttamente dal server!</p>
+    <!-- Sezione principale con i contenuti -->
+    <div class="content">
+        <header>
+            <h1>ACHILLE - Milano Onde Radio</h1>
+        </header>
+
+        <main style="text-align: center;">
+            <!-- Qui puoi aggiungere eventuali player audio, chat o riquadri -->
+            <p>Streaming attivo dal server remoto</p>
+        </main>
+
+        <footer style="text-align: center; font-size: 0.8rem; color: #aaa;">
+            &copy; 2026 Milano Onde Radio
+        </footer>
     </div>
 
 </body>
